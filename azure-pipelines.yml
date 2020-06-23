@@ -11,8 +11,8 @@ resources:
 variables:
   # Container registry service connection established during pipeline creation
   dockerRegistryServiceConnection: 'a536d773-2393-40e5-b452-8782ef58e3dd'
-  imageRepository: 'vmldjrestapi'
-  containerRegistry: 'apiimages.azurecr.io'
+  imageRepository: 'djrestapi'
+  containerRegistry: 'craussieservices.azurecr.io'
   dockerfilePath: '$(Build.SourcesDirectory)/Dockerfile'
   tag: '$(Build.BuildId)'
   

@@ -10,6 +10,10 @@ resources:
 
 variables:
   tag: '$(Build.BuildId)'
+  # Container registry service connection established during pipeline creation
+  dockerRegistryServiceConnection: '1f79ead0-c06b-43e2-ac72-c0174d30d14b'
+  imageRepository: 'aussiestocksservices'
+  containerRegistry: 'craussieservices.azurecr.io'
 
 stages:
 - stage: Build
@@ -21,9 +25,11 @@ stages:
       vmImage: 'ubuntu-latest'
     steps:
     - task: Docker@2
-      displayName: Build an image
+      displayName: Build and push an image to container registry
       inputs:
-        command: build
+        command: buildAndPush
+        repository: $(imageRepository)
         dockerfile: '$(Build.SourcesDirectory)/Dockerfile'
+        containerRegistry: $(dockerRegistryServiceConnection)
         tags: |
           $(tag)

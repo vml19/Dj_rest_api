@@ -1,7 +1,3 @@
-# Docker
-# Build a Docker image 
-# https://docs.microsoft.com/azure/devops/pipelines/languages/docker
-
 trigger:
 - master
 
@@ -33,3 +29,11 @@ stages:
         containerRegistry: $(dockerRegistryServiceConnection)
         tags: |
           $(tag)
+    - task: AzureWebAppContainer@1
+      inputs:
+        azureSubscription: 'Carols Azure Connection'
+        appName: 'djrestapi'
+        containers: 'aussiestockuserservice'
+        multicontainerConfigFile: '**/docker-compose.yml'
+        containerCommand: 'docker compose up'
+        appSettings: '-Port 8000'

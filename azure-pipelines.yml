@@ -12,7 +12,7 @@ variables:
   tag: '$(Build.BuildId)'
   # Container registry service connection established during pipeline creation
   dockerRegistryServiceConnection: '1f79ead0-c06b-43e2-ac72-c0174d30d14b'
-  imageRepository: 'aussiestocksservices'
+  imageRepository: 'aussiestockuserservice'
   containerRegistry: 'craussieservices.azurecr.io'
 
 stages:

@@ -9,7 +9,7 @@ variables:
   # Container registry service connection established during pipeline creation
   dockerRegistryServiceConnection: '1f79ead0-c06b-43e2-ac72-c0174d30d14b'
   imageRepository: 'aussiestockuserservice'
-  containerRegistry: 'craussieservices.azurecr.io'
+  containerRegistry: 'acraussiestocktrader.azurecr.io'
 
 stages:
 - stage: Build
@@ -31,9 +31,9 @@ stages:
           $(tag)
     - task: AzureWebAppContainer@1
       inputs:
-        azureSubscription: 'Carols Azure Connection'
+        azureSubscription: 'azure-resource-manager-service-connection'
         appName: 'djrestapi'
-        containers: 'aussiestockuserservice'
+        containers: 'djrestapi'
         multicontainerConfigFile: '**/docker-compose.yml'
         containerCommand: 'docker compose up'
         appSettings: '-Port 8000'

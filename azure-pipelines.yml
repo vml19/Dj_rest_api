@@ -4,7 +4,6 @@ trigger:
 pool:
   vmImage: 'ubuntu-latest'
 
-<<<<<<< HEAD
 steps:
 - script: echo K8S Terraform Azure!
   displayName: 'Run a one-line script'
@@ -34,39 +33,3 @@ steps:
     workingDirectory: '$(System.DefaultWorkingDirectory)/configuration/iaac/azure/kubernetes'
     environmentServiceName: 'azure-resource-manager-service-connection'
     commandOptions: '-var client_id=$(client_id) -var client_secret=$(client_secret) -var ssh_public_key=$(publickey.secureFilePath)'
-    
-=======
-variables:
-  tag: '$(Build.BuildId)'
-  # Container registry service connection established during pipeline creation
-  dockerRegistryServiceConnection: '1f79ead0-c06b-43e2-ac72-c0174d30d14b'
-  imageRepository: 'acraussiestocktraderservice'
-  containerRegistry: 'acraussiestocktrader.azurecr.io'
-
-stages:
-- stage: Build
-  displayName: Build image
-  jobs:  
-  - job: Build
-    displayName: Build
-    pool:
-      vmImage: 'ubuntu-latest'
-    steps:
-    - task: Docker@2
-      displayName: Build and push an image to container registry
-      inputs:
-        command: buildAndPush
-        repository: $(imageRepository)
-        dockerfile: '$(Build.SourcesDirectory)/Dockerfile'
-        containerRegistry: $(dockerRegistryServiceConnection)
-        tags: |
-          $(tag)
-    - task: AzureWebAppContainer@1
-      inputs:
-        azureSubscription: 'azure-resource-manager-service-connection'
-        appName: 'djrestapi'
-        containers: 'djrestapi'
-        multicontainerConfigFile: '**/docker-compose.yml'
-        containerCommand: 'docker compose up'
-        appSettings: '-Port 8000'
->>>>>>> 3c47ece3b91bdf4e37da74a1d297f536e62489c9

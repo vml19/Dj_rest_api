@@ -2,15 +2,15 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   labels:
-    app: currency-exchange
-  name: currency-exchange
+    app: djrestapi
+  name: djrestapi
   namespace: default
 spec:
   replicas: 1 #CHANGE
   minReadySeconds: 45
   selector:
     matchLabels:
-      app: currency-exchange
+      app: djrestapi
   strategy:
     rollingUpdate:
       maxSurge: 25%
@@ -19,11 +19,11 @@ spec:
   template:
     metadata:
       labels:
-        app: currency-exchange
+        app: djrestapi
     spec:
       containers:
-      - name: currency-exchange
-        image: in28min/currency-exchange-devops
+      - name: djrestapi
+        image: tvrajah/djrestapi
         imagePullPolicy: IfNotPresent
         ports:
         - name: liveness-port
@@ -56,8 +56,8 @@ apiVersion: v1
 kind: Service
 metadata:
   labels: #PODS
-    app: currency-exchange
-  name: currency-exchange
+    app: djrestapi
+  name: djrestapi
   namespace: default
 spec:
   ports:
@@ -66,6 +66,6 @@ spec:
     protocol: TCP
     targetPort: 8000 #CHANGE
   selector:
-    app: currency-exchange
+    app: djrestapi
   sessionAffinity: None #CHANGE
   type: LoadBalancer

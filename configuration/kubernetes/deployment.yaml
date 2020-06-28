@@ -1,26 +1,21 @@
-apiVersion: v1
-kind: Service
-metadata:
-  name: djrestapi-service
-spec:
-  selector:
-    app: djrestapi
-  ports:
-  - protocol: "TCP"
-    port: 6000
-    targetPort: 5000
-  type: LoadBalancer
-
----
-apiVersion: apps/v1
+apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
+  labels:
+    app: djrestapi
   name: djrestapi
+  namespace: default
 spec:
+  replicas: 1 #CHANGE
+  minReadySeconds: 45
   selector:
     matchLabels:
       app: djrestapi
-  replicas: 1
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
   template:
     metadata:
       labels:
@@ -29,6 +24,48 @@ spec:
       containers:
       - name: djrestapi
         image: tvrajah/djrestapi
-        imagePullPolicy: Never
+        imagePullPolicy: IfNotPresent
         ports:
-        - containerPort: 5000
+        - name: liveness-port
+          containerPort: 5000
+        resources: #CHANGE
+          requests:
+            cpu: 100m
+            memory: 512Mi
+          limits:
+            cpu: 500m
+            memory: 256Mi 
+        readinessProbe:
+          httpGet:
+            path: /
+            port: liveness-port
+          failureThreshold: 5
+          periodSeconds: 10
+          initialDelaySeconds: 60
+        livenessProbe:
+          httpGet:
+            path: /
+            port: liveness-port
+          failureThreshold: 5
+          periodSeconds: 10
+          initialDelaySeconds: 60
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels: #PODS
+    app: djrestapi
+  name: djrestapi
+  namespace: default
+spec:
+  ports:
+  - # nodePort: 30702 #CHANGE
+    port: 6000 #CHANGE
+    protocol: TCP
+    targetPort: 5000 #CHANGE
+  selector:
+    app: djrestapi
+  sessionAffinity: None #CHANGE
+  type: LoadBalancer
